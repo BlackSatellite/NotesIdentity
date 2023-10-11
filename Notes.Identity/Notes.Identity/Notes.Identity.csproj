@@ -12,4 +12,10 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.17" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Styles\app.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
