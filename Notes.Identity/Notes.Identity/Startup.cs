@@ -1,4 +1,6 @@
 
+using IdentityServer4.Services;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -12,6 +14,7 @@ using Notes.Identity.Data;
 using Notes.Identity.Models;
 
 using System.IO;
+using System.Security.Claims;
 
 namespace Notes.Identity
 {
@@ -33,7 +36,8 @@ namespace Notes.Identity
             {
                 options.UseSqlite(connectionString);
             });
-
+            services.Configure<IdentityOptions>(options =>
+                 options.ClaimsIdentity.UserIdClaimType = ClaimTypes.NameIdentifier);
             services.AddIdentity<AppUser, IdentityRole>(config =>
             {
                 config.Password.RequiredLength = 4;

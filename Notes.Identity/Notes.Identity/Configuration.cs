@@ -4,6 +4,7 @@ using IdentityServer4;
 using IdentityServer4.Models;
 
 using System.Collections.Generic;
+using System.Security.Claims;
 
 namespace Notes.Identity
 {
@@ -18,16 +19,17 @@ namespace Notes.Identity
         public static IEnumerable<IdentityResource> IdentityResources =>
             new List<IdentityResource>
             {
-                new IdentityResources.OpenId(),
-                new IdentityResources.Profile()
+                new IdentityResource("openid", new [] { ClaimTypes.NameIdentifier }),
+                new IdentityResources.Profile(),
             };
 
         public static IEnumerable<ApiResource> ApiResources =>
             new List<ApiResource>
             {
-                new ApiResource("NotesWebAPI", "Web API", new [] { JwtClaimTypes.Name})
+                new ApiResource("NotesWebAPI", "Web API")
                 {
-                    Scopes = {"NotesWebAPI"}
+                    Scopes = {"NotesWebAPI"},
+                    UserClaims = { ClaimTypes.NameIdentifier, JwtClaimTypes.Name }
                 }
             };
 
@@ -38,28 +40,24 @@ namespace Notes.Identity
                 {
                     ClientId = "notes-web-api",
                     ClientName = "Notes Web",
-                    AllowedGrantTypes = GrantTypes.Code,
+                    AllowedGrantTypes = { GrantType.ClientCredentials },
                     RequireClientSecret = false,
                     RequirePkce = true,
                     RedirectUris  =
                     {
-                        "http://.../singin-oidc"
+                        "http://localhost:3000/signin-oidc"
                     },
                     AllowedCorsOrigins =
                     {
-                        "http://..."
+                        "http://localhost:3000"
                     },
                     PostLogoutRedirectUris =
                     {
-                        "http://.../singout-oidc"
+                        "http://localhost:3000/singout-oidc"
                     },
-                    AllowedScopes =
-                    {
-                        IdentityServerConstants.StandardScopes.OpenId,
-                        IdentityServerConstants.StandardScopes.Profile,
-                        "NotesWebAPI"
-                    },
-                    AllowAccessTokensViaBrowser = true
+                    AllowedScopes = { "NotesWebAPI" },
+                    AllowAccessTokensViaBrowser = true,
+
 
                 }
             };
